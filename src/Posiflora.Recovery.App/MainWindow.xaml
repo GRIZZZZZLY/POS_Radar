@@ -121,7 +121,7 @@
                         <TextBlock Text="{Binding RecommendedAction}" TextWrapping="Wrap" Foreground="#4B5563" />
 
                         <CheckBox Content="Auto-fix available"
-                                  IsChecked="{Binding CanAutoFix}"
+                                  IsChecked="{Binding CanAutoFix, Mode=OneWay}"
                                   IsEnabled="False"
                                   Margin="0,22,0,0" />
                     </StackPanel>
