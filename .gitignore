@@ -1,0 +1,28 @@
+# Build outputs
+build/
+dist/
+bin/
+obj/
+TestResults/
+
+# Local browser/session artifacts
+.teamly-browser-profile/
+
+# Captured research screenshots
+teamly-*.png
+
+# Logs and local reports
+*.log
+reports/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.rsuser
+
