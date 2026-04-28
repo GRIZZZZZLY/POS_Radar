@@ -4,6 +4,7 @@ dist/
 bin/
 obj/
 TestResults/
+artifacts/
 
 # Local browser/session artifacts
 .teamly-browser-profile/

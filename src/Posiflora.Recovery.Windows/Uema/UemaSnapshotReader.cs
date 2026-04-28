@@ -12,7 +12,7 @@ public sealed class UemaSnapshotReader(
     ITcpConnectionReader tcpConnectionReader)
 {
     private static readonly string[] CloudConnectionStates = ["Established"];
-    private static readonly int[] CloudPorts = [443, 1883, 8883];
+    private static readonly int[] CloudPorts = [443, 1883];
 
     public Task<IReadOnlyList<UemaSnapshot>> ReadDefaultAsync(CancellationToken cancellationToken)
     {

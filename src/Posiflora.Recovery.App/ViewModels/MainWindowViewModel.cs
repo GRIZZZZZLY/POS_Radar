@@ -40,6 +40,8 @@ public sealed class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<FindingViewModel> Findings { get; } = [];
 
+    public ObservableCollection<UemaSnapshot> UemaSnapshots { get; } = [];
+
     public ObservableCollection<DiagnosticLogEntryViewModel> LogEntries { get; } = [];
 
     public AsyncRelayCommand RunDiagnosticsCommand { get; }
@@ -119,7 +121,7 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             var result = await _diagnosticsClient.RunUemaProfileAsync(_logSink, CancellationToken.None);
             ApplyResult(result);
-            AppendLog(DiagnosticLogLevel.Success, "Профиль", $"Диагностика завершена. Найдено проблем: {result.Findings.Count}.");
+            AppendLog(DiagnosticLogLevel.Success, "Профиль", $"Диагностика завершена. Найдено проблем: {result.CheckResult.Findings.Count}.");
         }
         finally
         {
@@ -132,20 +134,26 @@ public sealed class MainWindowViewModel : ObservableObject
         return RunDiagnosticsAsync();
     }
 
-    private void ApplyResult(CheckResult result)
+    private void ApplyResult(DiagnosticRunResult result)
     {
         Findings.Clear();
-        foreach (var finding in result.Findings.OrderByDescending(finding => finding.Severity))
+        foreach (var finding in result.CheckResult.Findings.OrderByDescending(finding => finding.Severity))
         {
             Findings.Add(new FindingViewModel(finding));
         }
 
-        CriticalCount = result.Findings.Count(finding => finding.Severity == FindingSeverity.Critical);
-        WarningCount = result.Findings.Count(finding => finding.Severity == FindingSeverity.Warning);
-        TotalCount = result.Findings.Count;
+        UemaSnapshots.Clear();
+        foreach (var snapshot in result.UemaSnapshots)
+        {
+            UemaSnapshots.Add(snapshot);
+        }
+
+        CriticalCount = result.CheckResult.Findings.Count(finding => finding.Severity == FindingSeverity.Critical);
+        WarningCount = result.CheckResult.Findings.Count(finding => finding.Severity == FindingSeverity.Warning);
+        TotalCount = result.CheckResult.Findings.Count;
         SelectedFinding = Findings.FirstOrDefault();
-        StatusText = $"Последний запуск: {result.FinishedAt.LocalDateTime:G}";
-        SummaryText = BuildSummary(result.Findings);
+        StatusText = $"Последний запуск: {result.CheckResult.FinishedAt.LocalDateTime:G}";
+        SummaryText = BuildSummary(result.CheckResult.Findings);
         AgentStatusText = "Локальный агент: контрольный сигнал";
     }
 

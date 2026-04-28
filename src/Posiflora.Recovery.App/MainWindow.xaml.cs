@@ -60,7 +60,10 @@ public partial class MainWindow : FluentWindow
 
     private void ExportReportButton_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        var reportPath = ApplicationLogStore.ExportReport(_viewModel.Findings);
+        var reportPath = ApplicationLogStore.ExportReport(
+            _viewModel.Findings,
+            _viewModel.UemaSnapshots,
+            _viewModel.LogEntries);
         OpenInExplorer(reportPath);
     }
 

@@ -59,6 +59,29 @@ public sealed class WindowsUemaSnapshotReaderTests
     }
 
     [Fact]
+    public async Task Uses_python_cloud_check_ports_443_and_1883_only()
+    {
+        var service = new WindowsServiceInfo(
+            "uem-agent",
+            "UEM Agent",
+            "Running",
+            "Auto",
+            "\"C:\\Program Files\\UEM\\uema.exe\" --service",
+            42);
+
+        var reader = new UemaSnapshotReader(
+            new FakeServiceReader(service),
+            new RecordingFileProbe(existingPath: "C:\\Program Files\\UEM\\uema.exe"),
+            new FakeTcpConnectionReader(
+                connections: [new TcpConnectionInfo(42, 50123, "203.0.113.10", 8883, "Established")],
+                listeners: []));
+
+        var snapshot = await reader.ReadAsync("uem-agent", "UEM Agent", CancellationToken.None);
+
+        snapshot.HasCloudConnection.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Reads_default_agent_and_updater_services()
     {
         var reader = new UemaSnapshotReader(

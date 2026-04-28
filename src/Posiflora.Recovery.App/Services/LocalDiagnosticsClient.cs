@@ -9,7 +9,7 @@ namespace Posiflora.Recovery.App.Services;
 
 public sealed class LocalDiagnosticsClient : IDiagnosticsClient
 {
-    public async Task<CheckResult> RunUemaProfileAsync(IDiagnosticLogSink log, CancellationToken cancellationToken)
+    public async Task<DiagnosticRunResult> RunUemaProfileAsync(IDiagnosticLogSink log, CancellationToken cancellationToken)
     {
         try
         {
@@ -32,13 +32,13 @@ public sealed class LocalDiagnosticsClient : IDiagnosticsClient
             }
 
             log.Write(DiagnosticLogLevel.Success, "Профиль", $"Профиль завершен: критические={result.Findings.Count(finding => finding.Severity == FindingSeverity.Critical)}, предупреждения={result.Findings.Count(finding => finding.Severity == FindingSeverity.Warning)}");
-            return result;
+            return new DiagnosticRunResult(result, snapshots);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             log.Write(DiagnosticLogLevel.Error, "Профиль", $"Сбой локальной диагностики: {exception.Message}");
             var now = DateTimeOffset.UtcNow;
-            return new CheckResult(
+            var result = new CheckResult(
                 UemaDiagnosticProfile.Metadata.Id,
                 now,
                 now,
@@ -54,6 +54,8 @@ public sealed class LocalDiagnosticsClient : IDiagnosticsClient
                         [],
                         "локальная диагностика")
                 ]);
+
+            return new DiagnosticRunResult(result, []);
         }
     }
 
