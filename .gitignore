@@ -7,6 +7,7 @@ TestResults/
 
 # Local browser/session artifacts
 .teamly-browser-profile/
+.worktrees/
 
 # Captured research screenshots
 teamly-*.png
@@ -25,4 +26,3 @@ __pycache__/
 *.user
 *.suo
 *.rsuser
-
