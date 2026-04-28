@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Posiflora.Recovery.Core\Posiflora.Recovery.Core.csproj" />
+    <ProjectReference Include="..\..\src\Posiflora.Recovery.Windows\Posiflora.Recovery.Windows.csproj" />
   </ItemGroup>
 
 </Project>
