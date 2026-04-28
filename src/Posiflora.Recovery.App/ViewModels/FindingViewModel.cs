@@ -8,6 +8,13 @@ public sealed class FindingViewModel(Finding finding)
 
     public string Severity { get; } = finding.Severity.ToString();
 
+    public string SeverityTitle { get; } = finding.Severity switch
+    {
+        FindingSeverity.Critical => "Критично",
+        FindingSeverity.Warning => "Предупреждение",
+        _ => "Информация"
+    };
+
     public string SeverityBackground { get; } = finding.Severity switch
     {
         FindingSeverity.Critical => "#B42318",

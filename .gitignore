@@ -8,6 +8,7 @@ TestResults/
 # Local browser/session artifacts
 .teamly-browser-profile/
 .worktrees/
+.superpowers/
 
 # Captured research screenshots
 teamly-*.png

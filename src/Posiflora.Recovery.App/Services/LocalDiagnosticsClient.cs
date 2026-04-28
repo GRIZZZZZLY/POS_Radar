@@ -34,11 +34,11 @@ public sealed class LocalDiagnosticsClient : IDiagnosticsClient
                         FindingSeverity.Critical,
                         "Не удалось выполнить локальную диагностику UEMA",
                         exception.Message,
-                        "Локальный read-only probe завершился ошибкой до получения snapshot.",
+                        "Локальная проверка в режиме только чтения завершилась ошибкой до получения снимка состояния.",
                         "Запустить приложение от имени пользователя с доступом к WMI/CIM и повторить диагностику.",
                         false,
                         [],
-                        "local.diagnostics")
+                        "локальная диагностика")
                 ]);
         }
     }
