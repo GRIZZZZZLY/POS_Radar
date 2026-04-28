@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Posiflora.Recovery.Agent-bcfc3373-6b37-4f24-b5f2-6efa47555f75</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Posiflora.Recovery.Core\Posiflora.Recovery.Core.csproj" />
+    <ProjectReference Include="..\Posiflora.Recovery.Windows\Posiflora.Recovery.Windows.csproj" />
+  </ItemGroup>
+</Project>
