@@ -4,5 +4,5 @@ namespace Posiflora.Recovery.App.Services;
 
 public interface IDiagnosticsClient
 {
-    Task<CheckResult> RunUemaProfileAsync(CancellationToken cancellationToken);
+    Task<CheckResult> RunUemaProfileAsync(IDiagnosticLogSink log, CancellationToken cancellationToken);
 }

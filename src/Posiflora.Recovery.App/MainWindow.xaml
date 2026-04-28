@@ -6,264 +6,189 @@
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  mc:Ignorable="d"
                  Title="POS Radar"
-                 Height="760"
-                 Width="1220"
-                 MinHeight="680"
-                 MinWidth="1050"
+                 Height="720"
+                 Width="1180"
+                 MinHeight="620"
+                 MinWidth="980"
                  WindowStartupLocation="CenterScreen"
-                 Background="#F3F5F8">
+                 Background="#F4F6F8">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="44" />
+            <RowDefinition Height="42" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="28" />
         </Grid.RowDefinitions>
 
         <ui:TitleBar Grid.Row="0" Title="POS Radar" ShowMaximize="True" ShowMinimize="True" ShowClose="True" />
 
-        <Grid Grid.Row="1">
+        <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="#DFE4EA" BorderThickness="0,0,0,1" Padding="14,0">
+            <DockPanel LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left" Text="POS Radar" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="#1F2937" />
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Запустить диагностику" Command="{Binding RunDiagnosticsCommand}" Height="30" Padding="12,0" Margin="0,0,8,0" Background="#0F9F6E" Foreground="White" BorderBrush="#0F9F6E" />
+                    <Button Content="Открыть логи" Click="OpenLogsButton_Click" Height="30" Padding="12,0" Margin="0,0,8,0" />
+                    <Button Content="Экспорт отчета" Click="ExportReportButton_Click" Height="30" Padding="12,0" Margin="0,0,8,0" />
+                    <Button Content="Свернуть в трей" Click="MinimizeToTrayButton_Click" Height="30" Padding="12,0" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="#FBFCFD" BorderBrush="#DFE4EA" BorderThickness="0,0,0,1" Padding="12,6">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Border Height="28" Padding="12,0" Margin="0,0,6,0" CornerRadius="6" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="UEMA / ошибка 11" FontWeight="SemiBold" Foreground="#1D4ED8" />
+                            <Border MinWidth="18" Height="18" Margin="8,0,0,0" Padding="6,0" CornerRadius="9" Background="#B42318">
+                                <TextBlock Text="{Binding CriticalCount}" Foreground="White" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <Border Height="28" Padding="12,0" Margin="0,0,6,0" CornerRadius="6">
+                        <TextBlock Text="Службы Windows" VerticalAlignment="Center" Foreground="#64748B" />
+                    </Border>
+                    <Border Height="28" Padding="12,0" Margin="0,0,6,0" CornerRadius="6">
+                        <TextBlock Text="Wi-Fi сеть" VerticalAlignment="Center" Foreground="#64748B" />
+                    </Border>
+                    <Border Height="28" Padding="12,0" Margin="0,0,6,0" CornerRadius="6">
+                        <TextBlock Text="Локальная сеть" VerticalAlignment="Center" Foreground="#64748B" />
+                    </Border>
+                    <Border Height="28" Padding="12,0" CornerRadius="6">
+                        <TextBlock Text="Устройства" VerticalAlignment="Center" Foreground="#64748B" />
+                    </Border>
+                </StackPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding StatusText}" VerticalAlignment="Center" Foreground="#64748B" />
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="3" Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.92*" />
+                <ColumnDefinition Width="1.08*" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="64" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="210" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="#101828" Padding="18,0">
-                <DockPanel LastChildFill="False">
-                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="POS Radar" Foreground="White" FontSize="18" FontWeight="SemiBold" />
-                        <Border Margin="14,0,0,0" Padding="9,4" CornerRadius="10" Background="#1D2939">
-                            <TextBlock Text="Режим: UEMA / ошибка 11" Foreground="#D0D5DD" FontSize="12" />
-                        </Border>
-                    </StackPanel>
-
-                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Content="Запустить диагностику"
-                                Command="{Binding RunDiagnosticsCommand}"
-                                Padding="14,8"
-                                Margin="0,0,8,0"
-                                Background="#12B76A"
-                                Foreground="White"
-                                BorderThickness="0" />
-                        <Button Content="Открыть логи"
-                                Click="OpenLogsButton_Click"
-                                Padding="12,8"
-                                Margin="0,0,8,0" />
-                        <Button Content="Экспорт отчета"
-                                Click="ExportReportButton_Click"
-                                Padding="12,8"
-                                Margin="0,0,8,0" />
-                        <Button Content="Свернуть в трей"
-                                Click="MinimizeToTrayButton_Click"
-                                Padding="12,8" />
-                    </StackPanel>
-                </DockPanel>
-            </Border>
-
-            <Grid Grid.Row="1" Margin="18">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0"
-                        Background="White"
-                        BorderBrush="#E4E7EC"
-                        BorderThickness="1"
-                        CornerRadius="10"
-                        Padding="16">
-                    <DockPanel LastChildFill="True">
-                        <StackPanel DockPanel.Dock="Top">
-                            <TextBlock Text="Профили" FontSize="18" FontWeight="SemiBold" />
-                            <TextBlock Text="{Binding StatusText}" Margin="0,8,0,0" Foreground="#667085" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding AgentStatusText}" Margin="0,12,0,16" Foreground="#475467" TextWrapping="Wrap" />
-                        </StackPanel>
-
-                        <ListBox ItemsSource="{Binding Profiles}"
-                                 SelectedItem="{Binding SelectedProfile}"
-                                 BorderThickness="0"
-                                 Background="Transparent">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="12" Margin="0,4" CornerRadius="8" Background="#EEF4FF">
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="#101828" />
-                                            <TextBlock Text="{Binding Description}" Foreground="#667085" TextWrapping="Wrap" Margin="0,4,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </DockPanel>
-                </Border>
-
-                <Grid Grid.Column="1" Margin="16,0,0,0">
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Background="White" BorderBrush="#DFE4EA" BorderThickness="1" CornerRadius="8" Margin="0,0,10,0">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="96" />
+                        <RowDefinition Height="38" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    <Border Grid.Row="0" BorderBrush="#DFE4EA" BorderThickness="0,0,0,1" Padding="12,0">
+                        <DockPanel>
+                            <TextBlock Text="Диагностика" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding SummaryText}" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="#64748B" />
+                        </DockPanel>
+                    </Border>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Findings}" SelectedItem="{Binding SelectedFinding}" BorderThickness="0" Padding="10" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10" Margin="0,0,0,8" BorderBrush="#DFE4EA" BorderThickness="1" CornerRadius="7" Background="White">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="86" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Height="26" Padding="9,0" CornerRadius="13" Background="{Binding SeverityBackground}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                            <TextBlock Text="{Binding SeverityTitle}" Foreground="White" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Evidence}" FontFamily="Consolas" FontSize="12" Foreground="#475569" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
 
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="1.2*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Background="#FEF3F2" CornerRadius="10" Padding="16" Margin="0,0,10,0">
-                            <StackPanel>
-                                <TextBlock Text="{Binding CriticalCount}" FontSize="26" FontWeight="SemiBold" Foreground="#B42318" />
-                                <TextBlock Text="Критические" Foreground="#7A271A" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="1" Background="#FFFAEB" CornerRadius="10" Padding="16" Margin="0,0,10,0">
-                            <StackPanel>
-                                <TextBlock Text="{Binding WarningCount}" FontSize="26" FontWeight="SemiBold" Foreground="#B54708" />
-                                <TextBlock Text="Предупреждения" Foreground="#7A2E0E" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="2" Background="#F2F4F7" CornerRadius="10" Padding="16" Margin="0,0,10,0">
-                            <StackPanel>
-                                <TextBlock Text="{Binding TotalCount}" FontSize="26" FontWeight="SemiBold" Foreground="#344054" />
-                                <TextBlock Text="Всего проблем" Foreground="#475467" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="3" Background="#ECFDF3" CornerRadius="10" Padding="16">
-                            <StackPanel>
-                                <TextBlock Text="Только чтение" FontSize="22" FontWeight="SemiBold" Foreground="#027A48" />
-                                <TextBlock Text="Ремонтные действия пока не выполняются" Foreground="#05603A" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-
-                    <Grid Grid.Row="1" Margin="0,16,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.2*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0"
-                                Background="White"
-                                BorderBrush="#E4E7EC"
-                                BorderThickness="1"
-                                CornerRadius="10"
-                                Padding="16"
-                                Margin="0,0,10,0">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                                    <TextBlock Text="Диагностика" FontSize="20" FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding SummaryText}" Foreground="#667085" />
-                                </StackPanel>
-
-                                <ListBox Grid.Row="1"
-                                         ItemsSource="{Binding Findings}"
-                                         SelectedItem="{Binding SelectedFinding}"
-                                         BorderThickness="0"
-                                         Background="Transparent"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Padding="12" Margin="0,0,0,10" BorderBrush="#E4E7EC" BorderThickness="1" CornerRadius="8">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="112" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Border Grid.Column="0"
-                                                            Height="30"
-                                                            CornerRadius="15"
-                                                            Background="{Binding SeverityBackground}"
-                                                            HorizontalAlignment="Left"
-                                                            Padding="12,0">
-                                                        <TextBlock Text="{Binding SeverityTitle}"
-                                                                   VerticalAlignment="Center"
-                                                                   Foreground="White"
-                                                                   FontWeight="SemiBold" />
-                                                    </Border>
-                                                    <StackPanel Grid.Column="1">
-                                                        <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
-                                                        <TextBlock Text="{Binding Source}" Foreground="#667085" Margin="0,3,0,0" />
-                                                        <TextBlock Text="{Binding Evidence}"
-                                                                   Foreground="#475467"
-                                                                   TextWrapping="NoWrap"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Margin="0,8,0,0" />
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
-                        </Border>
-
-                        <Grid Grid.Column="1" Margin="10,0,0,0">
+            <Border Grid.Column="1" Grid.Row="0" Background="White" BorderBrush="#DFE4EA" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" BorderBrush="#DFE4EA" BorderThickness="0,0,0,1" Padding="12,0">
+                        <DockPanel>
+                            <TextBlock Text="Сведения" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding SelectedFinding.Source}" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="#64748B" />
+                        </DockPanel>
+                    </Border>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <Grid Margin="12" DataContext="{Binding SelectedFinding}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="1.2*" />
-                                <RowDefinition Height="0.8*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-
-                            <Border Grid.Row="0"
-                                    Background="White"
-                                    BorderBrush="#E4E7EC"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="16"
-                                    Margin="0,0,0,10">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <StackPanel DataContext="{Binding SelectedFinding}">
-                                        <TextBlock Text="Сведения" FontSize="20" FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding Title}" Margin="0,14,0,0" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
-
-                                        <TextBlock Text="Данные проверки" Margin="0,18,0,6" FontWeight="SemiBold" Foreground="#344054" />
-                                        <TextBlock Text="{Binding Evidence}" TextWrapping="Wrap" Foreground="#475467" />
-
-                                        <TextBlock Text="Пояснение" Margin="0,18,0,6" FontWeight="SemiBold" Foreground="#344054" />
-                                        <TextBlock Text="{Binding Explanation}" TextWrapping="Wrap" Foreground="#475467" />
-
-                                        <TextBlock Text="Рекомендация" Margin="0,18,0,6" FontWeight="SemiBold" Foreground="#344054" />
-                                        <TextBlock Text="{Binding RecommendedAction}" TextWrapping="Wrap" Foreground="#475467" />
-
-                                        <CheckBox Content="Доступно автоисправление"
-                                                  IsChecked="{Binding CanAutoFix, Mode=OneWay}"
-                                                  IsEnabled="False"
-                                                  Margin="0,18,0,0" />
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </Border>
-
-                            <Border Grid.Row="1"
-                                    Background="White"
-                                    BorderBrush="#E4E7EC"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="16">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Журнал" FontSize="18" FontWeight="SemiBold" />
-                                    <ListBox Grid.Row="1"
-                                             ItemsSource="{Binding LogLines}"
-                                             Margin="0,10,0,0"
-                                             BorderThickness="0"
-                                             Background="#F9FAFB"
-                                             FontFamily="Consolas"
-                                             FontSize="12" />
-                                </Grid>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Заголовок" Foreground="#64748B" FontWeight="SemiBold" Margin="0,0,12,8" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Title}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Данные проверки" Foreground="#64748B" FontWeight="SemiBold" Margin="0,0,12,8" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Evidence}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12" Margin="0,0,0,8" />
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Пояснение" Foreground="#64748B" FontWeight="SemiBold" Margin="0,0,12,8" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Explanation}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Автоисправление" Foreground="#64748B" FontWeight="SemiBold" Margin="0,0,12,8" />
+                            <CheckBox Grid.Row="3" Grid.Column="1" Content="Доступно" IsChecked="{Binding CanAutoFix, Mode=OneWay}" IsEnabled="False" Margin="0,0,0,8" />
+                            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Padding="10" CornerRadius="7" Background="#FFF7ED" BorderBrush="#FED7AA" BorderThickness="1" Margin="0,4,0,0">
+                                <TextBlock Text="{Binding RecommendedAction}" TextWrapping="Wrap" Foreground="#7C2D12" />
                             </Border>
                         </Grid>
-                    </Grid>
+                    </ScrollViewer>
                 </Grid>
-            </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Grid.Row="1" Background="#0B1020" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" BorderBrush="#1F2937" BorderThickness="0,0,0,1" Padding="12,0" Background="White" CornerRadius="8,8,0,0">
+                        <DockPanel>
+                            <TextBlock Text="Логи" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="#1F2937" />
+                            <TextBlock Text="подробный ход проверки" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="#64748B" />
+                        </DockPanel>
+                    </Border>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding LogEntries}" BorderThickness="0" Background="#0B1020" Padding="10" FontFamily="Consolas" FontSize="12">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="64" />
+                                        <ColumnDefinition Width="58" />
+                                        <ColumnDefinition Width="84" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Time}" Foreground="#D1D5DB" />
+                                    <TextBlock Grid.Column="1" Text="{Binding LevelTitle}" Foreground="{Binding LevelBrush}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Source}" Foreground="#CBD5E1" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Message}" Foreground="#D1D5DB" TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
         </Grid>
+
+        <Border Grid.Row="4" Background="White" BorderBrush="#DFE4EA" BorderThickness="0,1,0,0" Padding="12,0">
+            <DockPanel>
+                <TextBlock Text="Готово · режим только чтение · логи: %LocalAppData%\POS Radar\logs\pos-radar.log" VerticalAlignment="Center" Foreground="#64748B" FontSize="12" />
+                <TextBlock Text="{Binding AgentStatusText}" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="#64748B" FontSize="12" />
+            </DockPanel>
+        </Border>
     </Grid>
 </ui:FluentWindow>

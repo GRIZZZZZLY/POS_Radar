@@ -9,20 +9,34 @@ namespace Posiflora.Recovery.App.Services;
 
 public sealed class LocalDiagnosticsClient : IDiagnosticsClient
 {
-    public async Task<CheckResult> RunUemaProfileAsync(CancellationToken cancellationToken)
+    public async Task<CheckResult> RunUemaProfileAsync(IDiagnosticLogSink log, CancellationToken cancellationToken)
     {
         try
         {
+            log.Write(DiagnosticLogLevel.Info, "Профиль", "Подготовка адаптеров Windows: WMI, файловая система, TCP");
             var reader = new UemaSnapshotReader(
                 new WindowsServiceReader(),
                 new FileProbe(),
                 new TcpConnectionReader());
 
-            var snapshots = await reader.ReadDefaultAsync(cancellationToken);
-            return UemaDiagnosticProfile.Build(snapshots);
+            var snapshots = await reader.ReadDefaultAsync(log, cancellationToken);
+            log.Write(DiagnosticLogLevel.Info, "Правила", "Построение findings по снимкам uem-agent и uem-updater");
+            var result = UemaDiagnosticProfile.Build(snapshots);
+
+            foreach (var finding in result.Findings)
+            {
+                var level = finding.Severity == FindingSeverity.Critical
+                    ? DiagnosticLogLevel.Error
+                    : DiagnosticLogLevel.Warning;
+                log.Write(level, "Правила", $"Результат правила: id={finding.Id}; уровень={TranslateSeverity(finding.Severity)}; автоисправление={TranslateBoolean(finding.CanAutoFix)}; источник={finding.Source}");
+            }
+
+            log.Write(DiagnosticLogLevel.Success, "Профиль", $"Профиль завершен: критические={result.Findings.Count(finding => finding.Severity == FindingSeverity.Critical)}, предупреждения={result.Findings.Count(finding => finding.Severity == FindingSeverity.Warning)}");
+            return result;
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
+            log.Write(DiagnosticLogLevel.Error, "Профиль", $"Сбой локальной диагностики: {exception.Message}");
             var now = DateTimeOffset.UtcNow;
             return new CheckResult(
                 UemaDiagnosticProfile.Metadata.Id,
@@ -41,5 +55,20 @@ public sealed class LocalDiagnosticsClient : IDiagnosticsClient
                         "локальная диагностика")
                 ]);
         }
+    }
+
+    private static string TranslateSeverity(FindingSeverity severity)
+    {
+        return severity switch
+        {
+            FindingSeverity.Critical => "критично",
+            FindingSeverity.Warning => "предупреждение",
+            _ => "информация"
+        };
+    }
+
+    private static string TranslateBoolean(bool value)
+    {
+        return value ? "да" : "нет";
     }
 }

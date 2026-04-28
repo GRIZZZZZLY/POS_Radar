@@ -8,6 +8,7 @@ namespace Posiflora.Recovery.App.ViewModels;
 public sealed class MainWindowViewModel : ObservableObject
 {
     private readonly IDiagnosticsClient _diagnosticsClient;
+    private readonly ViewModelDiagnosticLogSink _logSink;
     private DiagnosticProfileItemViewModel? _selectedProfile;
     private FindingViewModel? _selectedFinding;
     private string _statusText = "Диагностика еще не запускалась";
@@ -26,19 +27,20 @@ public sealed class MainWindowViewModel : ObservableObject
     public MainWindowViewModel(IDiagnosticsClient diagnosticsClient)
     {
         _diagnosticsClient = diagnosticsClient;
+        _logSink = new ViewModelDiagnosticLogSink(AppendLog);
         RunDiagnosticsCommand = new AsyncRelayCommand(RunDiagnosticsAsync, () => !IsBusy);
 
         var metadata = UemaDiagnosticProfile.Metadata;
         Profiles.Add(new DiagnosticProfileItemViewModel(metadata.Id, metadata.Title, metadata.Description));
         SelectedProfile = Profiles.FirstOrDefault();
-        LogLines.Add("Готово к запуску диагностики.");
+        AppendLog(DiagnosticLogLevel.Info, "Система", "Готово к запуску диагностики.");
     }
 
     public ObservableCollection<DiagnosticProfileItemViewModel> Profiles { get; } = [];
 
     public ObservableCollection<FindingViewModel> Findings { get; } = [];
 
-    public ObservableCollection<string> LogLines { get; } = [];
+    public ObservableCollection<DiagnosticLogEntryViewModel> LogEntries { get; } = [];
 
     public AsyncRelayCommand RunDiagnosticsCommand { get; }
 
@@ -110,14 +112,14 @@ public sealed class MainWindowViewModel : ObservableObject
         }
 
         IsBusy = true;
-        AppendLog("Диагностика запущена.");
+        AppendLog(DiagnosticLogLevel.Info, "Профиль", "Запуск профиля: UEMA / ошибка 11");
         StatusText = "Читаю службы, файлы и TCP-соединения";
 
         try
         {
-            var result = await _diagnosticsClient.RunUemaProfileAsync(CancellationToken.None);
+            var result = await _diagnosticsClient.RunUemaProfileAsync(_logSink, CancellationToken.None);
             ApplyResult(result);
-            AppendLog($"Диагностика завершена. Найдено проблем: {result.Findings.Count}.");
+            AppendLog(DiagnosticLogLevel.Success, "Профиль", $"Диагностика завершена. Найдено проблем: {result.Findings.Count}.");
         }
         finally
         {
@@ -147,15 +149,15 @@ public sealed class MainWindowViewModel : ObservableObject
         AgentStatusText = "Локальный агент: контрольный сигнал";
     }
 
-    private void AppendLog(string message)
+    private void AppendLog(DiagnosticLogLevel level, string source, string message)
     {
-        var line = $"{DateTimeOffset.Now:HH:mm:ss}  {message}";
-        ApplicationLogStore.Append(line);
-        LogLines.Insert(0, line);
+        var entry = new DiagnosticLogEntryViewModel(new DiagnosticLogEntry(DateTimeOffset.Now, level, source, message));
+        ApplicationLogStore.Append(entry.ToLogLine());
+        LogEntries.Insert(0, entry);
 
-        while (LogLines.Count > 80)
+        while (LogEntries.Count > 120)
         {
-            LogLines.RemoveAt(LogLines.Count - 1);
+            LogEntries.RemoveAt(LogEntries.Count - 1);
         }
     }
 
@@ -169,5 +171,13 @@ public sealed class MainWindowViewModel : ObservableObject
         var critical = findings.Count(finding => finding.Severity == FindingSeverity.Critical);
         var warnings = findings.Count(finding => finding.Severity == FindingSeverity.Warning);
         return $"Критические: {critical}; Предупреждения: {warnings}; Всего: {findings.Count}";
+    }
+
+    private sealed class ViewModelDiagnosticLogSink(Action<DiagnosticLogLevel, string, string> append) : IDiagnosticLogSink
+    {
+        public void Write(DiagnosticLogLevel level, string source, string message)
+        {
+            append(level, source, message);
+        }
     }
 }

@@ -20,13 +20,6 @@ public partial class MainWindow : FluentWindow
         _viewModel = new MainWindowViewModel();
         DataContext = _viewModel;
         _notifyIcon = CreateNotifyIcon();
-        Loaded += OnLoaded;
-    }
-
-    private async void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
-    {
-        Loaded -= OnLoaded;
-        await _viewModel.LoadAsync();
     }
 
     protected override void OnStateChanged(EventArgs e)
